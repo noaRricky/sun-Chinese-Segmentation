@@ -41,6 +41,19 @@ class PeopleReader(DatasetReader):
 
         raise NotImplementedError
 
-    def _process_line(self, line):
+    def _process_line(self, line: str) -> Instance:
 
-        raise NotImplementedError
+        # init parameter
+        line = line.strip()  # strip empty space
+        line_length = len(line)
+        see_left_b = False
+        start = 0
+
+        try:
+            for i in range(line_length):
+                if line[i] == ' ':
+                    if not see_left_b:
+                        token: str = line[start: i]
+                        if token.startswith('['):
+                            token_: str = ''
+                            for j in [i]
