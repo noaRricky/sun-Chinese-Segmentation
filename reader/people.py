@@ -38,7 +38,8 @@ class PeopleReader(DatasetReader):
                         string_list = line.strip().split()
                         string_list = [re.sub('^\[', '', string)
                                        for string in string_list]
-                        tokens = [string.split("/")[0] for string in string_list]
+                        tokens = [string.split("/")[0]
+                                  for string in string_list]
                         yield self.text_to_instance(tokens)
 
     @overrides
@@ -62,10 +63,10 @@ class PeopleReader(DatasetReader):
                     else:
                         character_tags.append(self._tags[1])
         character_field = TextField(character_tokens, self._token_indexer)
-        tag_field = SequenceLabelField(
+        label_field = SequenceLabelField(
             character_tags, sequence_field=character_field)
         field = {
             'character': character_field,
-            'tag': tag_field
+            'labels': label_field
         }
         return Instance(field)

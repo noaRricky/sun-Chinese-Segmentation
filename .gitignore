@@ -3,3 +3,4 @@ corpus/*
 .idea/*
 .pytest_cache/*
 test/__pycache__/*
+*/*.pyc
