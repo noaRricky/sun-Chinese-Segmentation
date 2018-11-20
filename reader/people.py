@@ -22,6 +22,7 @@ class PeopleReader(DatasetReader):
     def __init__(self, token_indexers: Dict[str, TokenIndexer]):
         self._token_indexers = token_indexers or {
             'tokens': SingleIdTokenIndexer()}
+        self._tags = ['begin', 'mid', 'end', 'single', 'date_']
 
     @overrides
     def _read(self, file_path: str) -> Iterable[Instance]:
@@ -33,7 +34,7 @@ class PeopleReader(DatasetReader):
                 cur_file = os.path.join(dir_name, file)
                 logger.info(f"processing: {cur_file}")
                 with open(cur_file, mode='r', encoding='utf-8') as fp:
-                    for line in fp.readlines():
+                    for line in fp:
                         yield self._process_line(line)
 
     @overrides
@@ -43,17 +44,12 @@ class PeopleReader(DatasetReader):
 
     def _process_line(self, line: str) -> Instance:
 
-        # init parameter
-        line = line.strip()  # strip empty space
-        line_length = len(line)
-        see_left_b = False
-        start = 0
+        string_list = line.strip().split()
+        string_list = [re.sub('^\[', '', string) for string in string_list]
+        token_tag_pairs = [string.split() for string in string_list]
 
-        try:
-            for i in range(line_length):
-                if line[i] == ' ':
-                    if not see_left_b:
-                        token: str = line[start: i]
-                        if token.startswith('['):
-                            token_: str = ''
-                            for j in [i]
+        token_list: List = []
+        tag_list: List = []
+        for pair in token_tag_pairs:
+            token: str = pair[0]
+            tag: str = pair[0]
