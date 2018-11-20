@@ -10,8 +10,8 @@ from allennlp.common.file_utils import cached_path
 from allennlp.data.dataset_readers.dataset_reader import DatasetReader
 from allennlp.data.fields import Field, TextField, SequenceLabelField
 from allennlp.data.instance import Instance
-from allennlp.data.token_indexers import SingleIdTokenIndexer
-from allennlp.data.tokenizers import CharacterTokenizer
+from allennlp.data.token_indexers import SingleIdTokenIndexer, TokenIndexer
+from allennlp.data.tokenizers import CharacterTokenizer, Tokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +19,9 @@ logger = logging.getLogger(__name__)
 @DatasetReader.register("people2014")
 class PeopleReader(DatasetReader):
 
-    def __init__(self):
-        self._character_tokenizer = CharacterTokenizer()
-        self._token_indexer = {'tokens': SingleIdTokenIndexer}
+    def __init__(self, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
+        self._character_tokenizer = tokenizer or CharacterTokenizer()
+        self._token_indexer = token_indexer or {'tokens': SingleIdTokenIndexer}
         self._tags = ['begin', 'mid', 'end', 'single']
 
     @overrides
@@ -38,7 +38,7 @@ class PeopleReader(DatasetReader):
                         string_list = line.strip().split()
                         string_list = [re.sub('^\[', '', string)
                                        for string in string_list]
-                        tokens = [string.split()[0] for string in string_list]
+                        tokens = [string.split("/")[0] for string in string_list]
                         yield self.text_to_instance(tokens)
 
     @overrides
@@ -63,7 +63,7 @@ class PeopleReader(DatasetReader):
                         character_tags.append(self._tags[1])
         character_field = TextField(character_tokens, self._token_indexer)
         tag_field = SequenceLabelField(
-            character_tags, sequence_field=character_tokens)
+            character_tags, sequence_field=character_field)
         field = {
             'character': character_field,
             'tag': tag_field
