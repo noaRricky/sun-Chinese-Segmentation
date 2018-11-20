@@ -10,8 +10,8 @@ from allennlp.common.file_utils import cached_path
 from allennlp.data.dataset_readers.dataset_reader import DatasetReader
 from allennlp.data.fields import Field, TextField, SequenceLabelField
 from allennlp.data.instance import Instance
-from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
-from allennlp.data.tokenizers import Token
+from allennlp.data.token_indexers import SingleIdTokenIndexer
+from allennlp.data.tokenizers import CharacterTokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -19,10 +19,10 @@ logger = logging.getLogger(__name__)
 @DatasetReader.register("people2014")
 class PeopleReader(DatasetReader):
 
-    def __init__(self, token_indexers: Dict[str, TokenIndexer]):
-        self._token_indexers = token_indexers or {
-            'tokens': SingleIdTokenIndexer()}
-        self._tags = ['begin', 'mid', 'end', 'single', 'date_']
+    def __init__(self):
+        self._character_tokenizer = CharacterTokenizer()
+        self._token_indexer = {'tokens': SingleIdTokenIndexer}
+        self._tags = ['begin', 'mid', 'end', 'single']
 
     @overrides
     def _read(self, file_path: str) -> Iterable[Instance]:
@@ -35,21 +35,37 @@ class PeopleReader(DatasetReader):
                 logger.info(f"processing: {cur_file}")
                 with open(cur_file, mode='r', encoding='utf-8') as fp:
                     for line in fp:
-                        yield self._process_line(line)
+                        string_list = line.strip().split()
+                        string_list = [re.sub('^\[', '', string)
+                                       for string in string_list]
+                        tokens = [string.split()[0] for string in string_list]
+                        yield self.text_to_instance(tokens)
 
     @overrides
-    def text_to_instance(self, *inputs) -> Instance:
+    def text_to_instance(self, tokens: List[str]) -> Instance:
+        character_tokens: List = []
+        character_tags: List = []
+        for token in tokens:
+            # get charactor tokens and append to list
+            charaters = self._character_tokenizer.tokenize(token)
+            character_tokens += charaters
 
-        raise NotImplementedError
-
-    def _process_line(self, line: str) -> Instance:
-
-        string_list = line.strip().split()
-        string_list = [re.sub('^\[', '', string) for string in string_list]
-        token_tag_pairs = [string.split() for string in string_list]
-
-        token_list: List = []
-        tag_list: List = []
-        for pair in token_tag_pairs:
-            token: str = pair[0]
-            tag: str = pair[0]
+            char_num = len(charaters)
+            if char_num == 1:
+                character_tags.append(self._tags[3])
+            else:
+                for i in range(char_num):
+                    if i == 0:
+                        character_tags.append(self._tags[0])
+                    elif i == char_num - 1:
+                        character_tags.append(self._tags[2])
+                    else:
+                        character_tags.append(self._tags[1])
+        character_field = TextField(character_tokens, self._token_indexer)
+        tag_field = SequenceLabelField(
+            character_tags, sequence_field=character_tokens)
+        field = {
+            'character': character_field,
+            'tag': tag_field
+        }
+        return Instance(field)
