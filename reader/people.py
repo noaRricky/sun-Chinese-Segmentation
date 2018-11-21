@@ -36,7 +36,7 @@ class PeopleReader(DatasetReader):
                 with open(cur_file, mode='r', encoding='utf-8') as fp:
                     for line in fp:
                         string_list = line.strip().split()
-                        string_list = [re.sub('^\[', '', string)
+                        string_list = [re.sub(r'^\[', '', string)
                                        for string in string_list]
                         tokens = [string.split("/")[0]
                                   for string in string_list]

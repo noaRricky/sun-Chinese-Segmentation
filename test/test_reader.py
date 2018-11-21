@@ -10,4 +10,3 @@ class TestPeopleDatasetReader(AllenNlpTestCase):
         instances = ensure_list(reader.read('../corpus/sample'))
         for instance in instances:
             print(instance)
-
