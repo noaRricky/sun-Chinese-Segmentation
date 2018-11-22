@@ -21,7 +21,7 @@ class PeopleReader(DatasetReader):
 
     def __init__(self, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
         self._character_tokenizer = tokenizer or CharacterTokenizer()
-        self._token_indexer = token_indexer or {'tokens': SingleIdTokenIndexer}
+        self._token_indexer = token_indexer or {'tokens': SingleIdTokenIndexer()}
         self._tags = ['begin', 'mid', 'end', 'single']
 
     @overrides
@@ -62,7 +62,7 @@ class PeopleReader(DatasetReader):
                         character_tags.append(self._tags[2])
                     else:
                         character_tags.append(self._tags[1])
-        character_field = TextField(character_tokens, self._token_indexer)
+        character_field = TextField(character_tokens, token_indexers=self._token_indexer)
         label_field = SequenceLabelField(
             character_tags, sequence_field=character_field)
         field = {
