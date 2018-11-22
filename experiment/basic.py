@@ -33,6 +33,8 @@ HIDDEN_DIM = 128
 DROPOUT_RATE = 0.1
 LEARNING_RATE = 0.001
 BATCH_SIZE = 10
+PATIENCE = 10
+NUM_EPOCH = 1000
 
 # set seed for keeping random number the same for each turn
 torch.manual_seed(SEED)
@@ -69,7 +71,8 @@ else:
         pickle.dump(vocab, fp)
 
 # define base item of model
-token_embedding = Embedding(num_embeddings=vocab.get_vocab_size('tokens'))
+token_embedding = Embedding(num_embeddings=vocab.get_vocab_size('tokens'),
+                            embedding_dim=EMBEDDING_DIM)
 word_embeddings = BasicTextFieldEmbedder({'tokens': token_embedding})
 
 lstm = torch.nn.LSTM(EMBEDDING_DIM, HIDDEN_DIM, batch_first=True, bidirectional=True)
@@ -85,15 +88,16 @@ optimizer = optim.Adam(params=model.parameters(),
                        lr=LEARNING_RATE)
 
 iterator = BucketIterator(batch_size=BATCH_SIZE,
-                          sorting_keys=[('character', 'num_tokens')])
+                          sorting_keys=[('sentence', 'num_tokens')])
 
 iterator.index_with(vocab)
 
 trainer = Trainer(model=model,
                   optimizer=optimizer,
+                  iterator=iterator,
                   train_dataset=train_data,
                   validation_dataset=dev_data,
-                  patience=10,
-                  num_epochs=1000)
+                  patience=PATIENCE,
+                  num_epochs=NUM_EPOCH)
 
 trainer.train()

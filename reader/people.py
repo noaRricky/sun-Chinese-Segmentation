@@ -47,11 +47,11 @@ class PeopleReader(DatasetReader):
         character_tokens: List = []
         character_tags: List = []
         for token in tokens:
-            # get charactor tokens and append to list
-            charaters = self._character_tokenizer.tokenize(token)
-            character_tokens += charaters
+            # get character tokens and append to list
+            characters = self._character_tokenizer.tokenize(token)
+            character_tokens += characters
 
-            char_num = len(charaters)
+            char_num = len(characters)
             if char_num == 1:
                 character_tags.append(self._tags[3])
             else:
@@ -62,11 +62,11 @@ class PeopleReader(DatasetReader):
                         character_tags.append(self._tags[2])
                     else:
                         character_tags.append(self._tags[1])
-        character_field = TextField(character_tokens, token_indexers=self._token_indexer)
+        sentence_field = TextField(character_tokens, token_indexers=self._token_indexer)
         label_field = SequenceLabelField(
-            character_tags, sequence_field=character_field)
+            character_tags, sequence_field=sentence_field)
         field = {
-            'character': character_field,
+            'sentence': sentence_field,
             'labels': label_field
         }
         return Instance(field)
