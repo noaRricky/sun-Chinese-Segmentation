@@ -1,1 +1,1 @@
-from people import PeopleReader
+from .people import PeopleReader
