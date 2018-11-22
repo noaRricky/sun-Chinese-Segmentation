@@ -26,6 +26,7 @@ DATA_PATH = '../corpus/2014/'
 SEED = 1
 TRAIN_DATA_PATH = '../data/train.pkl'
 DEV_DATA_PATH = '../data/dev.pkl'
+VOCAB_DATA_PATH = '../data/vocab.pkl'
 
 # set seed for keeping random number the same for each turn
 torch.manual_seed(SEED)
@@ -39,6 +40,8 @@ if Path(TRAIN_DATA_PATH).exists():
         train_data = pickle.load(fp)
     with open(file=DEV_DATA_PATH, mode='rb', encoding='utf-8') as fp:
         dev_data = pickle.load(fp)
+    with open(file=VOCAB_DATA_PATH, mode='rb', encoding='utf-8') as fp:
+        vocab = pickle.load(fp)
 else:
     data: List = reader.read(DATA_PATH)
     data_size = len(data)
@@ -48,6 +51,7 @@ else:
 
     train_data = data[: train_data_size]
     dev_data = data[train_data_size:]
+    vocab = Vocabulary.from_instances(data)
 
     with open(file=TRAIN_DATA_PATH, mode='wb', encoding='utf-8') as fp:
         pickle.dump(train_data, fp)
@@ -55,3 +59,8 @@ else:
     with open(file=DEV_DATA_PATH, mode='wb', encoding='utf-8') as fp:
         pickle.dump(dev_data, fp)
 
+    with open(file=VOCAB_DATA_PATH, mode='wb', encoding='utf-8') as fp:
+        pickle.dump(vocab)
+
+
+# define base item of model
