@@ -1,5 +1,6 @@
 data/*
 corpus/*
+store/*
 .idea/*
 .pytest_cache/*
 test/__pycache__/*

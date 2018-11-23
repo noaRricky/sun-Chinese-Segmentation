@@ -19,7 +19,9 @@ logger = logging.getLogger(__name__)
 @DatasetReader.register("people2014")
 class PeopleReader(DatasetReader):
 
-    def __init__(self, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
+    def __init__(self, lazy: bool = False, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
+        super().__init__(False)
+
         self._character_tokenizer = tokenizer or CharacterTokenizer()
         self._token_indexer = token_indexer or {'tokens': SingleIdTokenIndexer()}
         self._tags = ['B', 'M', 'E', 'S']
@@ -37,7 +39,6 @@ class PeopleReader(DatasetReader):
                 tokens = [string.split("/")[0]
                           for string in string_list]
                 yield self.text_to_instance(tokens)
-
 
     @overrides
     def text_to_instance(self, tokens: List[str]) -> Instance:
@@ -62,8 +63,8 @@ class PeopleReader(DatasetReader):
         sentence_field = TextField(character_tokens, token_indexers=self._token_indexer)
         label_field = SequenceLabelField(
             character_tags, sequence_field=sentence_field)
-        field = {
+        fields = {
             'sentence': sentence_field,
             'labels': label_field
         }
-        return Instance(field)
+        return Instance(fields)
