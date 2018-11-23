@@ -28,8 +28,8 @@ def aggreggate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) 
     data_length = len(lines)
     train_size = data_length * train_data_rate
 
-    train_data = lines[:train_data_rate]
-    valid_data = lines[train_data_rate:]
+    train_data = lines[:train_size]
+    valid_data = lines[train_size:]
 
     # save train data
     with open(file=save_path + '_train.txt', mode='w', encoding='utf-8') as fp:
