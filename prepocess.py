@@ -6,10 +6,13 @@ logger = logging.getLogger(__name__)
 
 # config
 DATA_ROOT = './corpus/sample/'
-SAVE_PATH = './corpus/people'
+SAVE_PATH = './corpus/people/'
 
 
-def aggreggate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) -> None:
+def aggregate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) -> None:
+    train_file = 'train.txt'
+    valid_file = 'valid.txt'
+
     root_dir = data_root
     logger.info(f"root dir is {root_dir}")
     lines = []
@@ -23,21 +26,25 @@ def aggreggate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) 
                 for line in fp:
                     lines.append(line)
 
-    # split data into training and testing dataset
+    logger.info("read all data!")
+
     random.shuffle(lines)
     data_length = len(lines)
-    train_size = data_length * train_data_rate
+    train_data_size = int(data_length * train_data_rate)
 
-    train_data = lines[:train_size]
-    valid_data = lines[train_size:]
+    train_data = lines[: train_data_size]
+    valid_data = lines[train_data_size:]
+
+    logger.info("split data and save")
 
     # save train data
-    with open(file=save_path + '_train.txt', mode='w', encoding='utf-8') as fp:
+    with open(file=save_path + train_file, mode='w', encoding='utf-8') as fp:
         fp.writelines(train_data)
-    # save validation data
-    with open(file=save_path + '_valid.txt', mode='w', encoding='utf-8') as fp:
+    with open(file=save_path + valid_file, mode='w', encoding='utf-8') as fp:
         fp.writelines(valid_data)
+
+    logger.info("done!")
 
 
 if __name__ == '__main__':
-    aggreggate_data(DATA_ROOT, SAVE_PATH)
+    aggregate_data(DATA_ROOT, SAVE_PATH)
