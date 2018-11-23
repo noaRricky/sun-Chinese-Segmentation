@@ -1,14 +1,18 @@
 import logging
 import os
+import random
 
 logger = logging.getLogger(__name__)
 
 # config
 DATA_ROOT = './corpus/sample/'
-SAVE_PATH = './corpus/people.txt'
+SAVE_PATH = './corpus/people/'
 
 
-def aggreggate_data(data_root: str, save_path: str):
+def aggregate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) -> None:
+    train_file = 'train.txt'
+    valid_file = 'valid.txt'
+
     root_dir = data_root
     logger.info(f"root dir is {root_dir}")
     lines = []
@@ -22,7 +26,17 @@ def aggreggate_data(data_root: str, save_path: str):
                 for line in fp:
                     lines.append(line)
 
-    with open(file=save_path, mode='w', encoding='utf-8') as fp:
+    random.shuffle(lines)
+    data_length = len(lines)
+    train_data_size = int(data_length * train_data_rate)
+
+    train_data = lines[: train_data_size]
+    valid_data = lines[train_data_size:]
+
+    # save train data
+    with open(file=save_path + train_file, mode='w', encoding='utf-8') as fp:
+        fp.writelines(lines)
+    with open(file=save_path + valid_file, mode='w', encoding='utf-8') as fp:
         fp.writelines(lines)
 
 
