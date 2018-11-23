@@ -8,7 +8,7 @@ from my_library.reader import PeopleReader
 class TestPeopleDatasetReader(AllenNlpTestCase):
     def test_read_from_dir(self):
         reader = PeopleReader()
-        dataset = ensure_list(reader.read('../corpus/sample'))
-        vocab = Vocabulary.from_instances(dataset)
+        dataset = ensure_list(reader.read('../corpus/people/train.txt'))
 
-        print(vocab.get_vocab_size('tokens'))
+        for instance in dataset:
+            print(instance)

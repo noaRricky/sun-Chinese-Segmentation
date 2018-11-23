@@ -5,7 +5,7 @@ import random
 logger = logging.getLogger(__name__)
 
 # config
-DATA_ROOT = './corpus/sample/'
+DATA_ROOT = './corpus/2014/'
 SAVE_PATH = './corpus/people/'
 
 

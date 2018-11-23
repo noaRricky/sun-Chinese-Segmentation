@@ -22,7 +22,7 @@ class PeopleReader(DatasetReader):
     def __init__(self, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
         self._character_tokenizer = tokenizer or CharacterTokenizer()
         self._token_indexer = token_indexer or {'tokens': SingleIdTokenIndexer()}
-        self._tags = ['begin', 'mid', 'end', 'single']
+        self._tags = ['B', 'M', 'E', 'S']
 
     @overrides
     def _read(self, file_path: str) -> Iterable[Instance]:
