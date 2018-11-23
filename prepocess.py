@@ -35,10 +35,10 @@ def aggregate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) -
 
     # save train data
     with open(file=save_path + train_file, mode='w', encoding='utf-8') as fp:
-        fp.writelines(lines)
+        fp.writelines(train_data)
     with open(file=save_path + valid_file, mode='w', encoding='utf-8') as fp:
-        fp.writelines(lines)
+        fp.writelines(valid_data)
 
 
 if __name__ == '__main__':
-    aggreggate_data(DATA_ROOT, SAVE_PATH)
+    aggregate_data(DATA_ROOT, SAVE_PATH)
