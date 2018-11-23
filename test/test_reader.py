@@ -1,10 +1,8 @@
-import random
-
 from allennlp.common.testing import AllenNlpTestCase
 from allennlp.common.util import ensure_list
 from allennlp.data.vocabulary import Vocabulary
 
-from reader import PeopleReader
+from my_library.reader import PeopleReader
 
 
 class TestPeopleDatasetReader(AllenNlpTestCase):
