@@ -26,6 +26,8 @@ def aggregate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) -
                 for line in fp:
                     lines.append(line)
 
+    logger.info("read all data!")
+
     random.shuffle(lines)
     data_length = len(lines)
     train_data_size = int(data_length * train_data_rate)
@@ -33,11 +35,15 @@ def aggregate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) -
     train_data = lines[: train_data_size]
     valid_data = lines[train_data_size:]
 
+    logger.info("split data and save")
+
     # save train data
     with open(file=save_path + train_file, mode='w', encoding='utf-8') as fp:
         fp.writelines(train_data)
     with open(file=save_path + valid_file, mode='w', encoding='utf-8') as fp:
         fp.writelines(valid_data)
+
+    logger.info("done!")
 
 
 if __name__ == '__main__':
