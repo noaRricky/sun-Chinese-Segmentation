@@ -12,3 +12,5 @@ class TestPeopleDatasetReader(AllenNlpTestCase):
 
         for instance in dataset:
             print(instance)
+            print(len(instance['tokens']))
+            print(len(instance['tags']))

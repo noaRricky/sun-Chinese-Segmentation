@@ -10,30 +10,31 @@
       "token_embedders": {
         "tokens": {
           "type": "embedding",
-          "embedding_dim": 6
+          "embedding_dim": 128
         }
       }
     },
     "encoder": {
       "type": "lstm",
-      "input_size": 6,
-      "hidden_size": 6,
+      "input_size": 128,
+      "hidden_size": 128,
       "num_layers": 1,
-      "dropout": 0.2,
+      "dropout": 0.1,
       "bidirectional": true
     }
   },
   "iterator": {
     "type": "basic",
-    "batch_size": 2
+    "batch_size": 128
   },
   "trainer": {
-    "num_epochs": 40,
-    "patience": 10,
+    "num_epochs": 15,
+    "patience": 5,
     "cuda_device": -1,
     "validation_metric": "+accuracy",
     "optimizer": {
-      "type": "adam"
+      "type": "adam",
+      "lr": "0.001"
     }
   }
 }
