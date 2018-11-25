@@ -60,11 +60,11 @@ class PeopleReader(DatasetReader):
                         character_tags.append(self._tags[2])
                     else:
                         character_tags.append(self._tags[1])
-        sentence_field = TextField(character_tokens, token_indexers=self._token_indexer)
-        label_field = SequenceLabelField(
-            character_tags, sequence_field=sentence_field)
+        tokens_field = TextField(character_tokens, token_indexers=self._token_indexer)
+        tags_field = SequenceLabelField(
+            character_tags, sequence_field=tokens_field)
         fields = {
-            'sentence': sentence_field,
-            'labels': label_field
+            'tokens': tokens_field,
+            'tags': tags_field
         }
         return Instance(fields)
