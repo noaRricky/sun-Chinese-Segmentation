@@ -34,7 +34,7 @@
     "validation_metric": "+accuracy",
     "optimizer": {
       "type": "adam",
-      "lr": "0.001"
+      "lr": 0.001
     }
   }
 }
