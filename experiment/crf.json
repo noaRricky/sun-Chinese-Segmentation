@@ -5,7 +5,7 @@
         "type": "people2014"
     },
     "model": {
-        "type": "simple_tagger",
+        "type": "crf_tagger",
         "text_field_embedder": {
             "token_embedders": {
                 "tokens": {
@@ -19,13 +19,20 @@
             "input_size": 128,
             "hidden_size": 128,
             "num_layers": 1,
-            "dropout": 0.1,
             "bidirectional": true
-        }
+        },
+        "label_namespace": "tags",
+        "dropout": 0.1
     },
     "iterator": {
-        "type": "basic",
-        "batch_size": 128
+        "type": "bucket",
+        "batch_size": 128,
+        "sorting_keys": [
+            [
+                "tokens",
+                "num_token"
+            ]
+        ]
     },
     "trainer": {
         "num_epochs": 15,
