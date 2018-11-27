@@ -1,5 +1,5 @@
 import logging
-import os
+from pathlib import Path
 import random
 
 logger = logging.getLogger(__name__)
@@ -18,13 +18,13 @@ def aggregate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) -
     lines = []
 
     # read all lines from different files
-    for dir_name, sub_list, file_list in os.walk(root_dir):
-        for file in file_list:
-            cur_file = os.path.join(dir_name, file)
-            logger.info(f"processing: {cur_file}")
-            with open(cur_file, mode='r', encoding='utf-8') as fp:
-                for line in fp:
-                    lines.append(line)
+    data_path = Path(DATA_ROOT)
+    assert data_path.is_dir() is True, "The data dir is not exist"
+    for cur_file in data_path.glob("*.txt"):
+        logger.info(f"processing: {cur_file}")
+        with cur_file.open(mode='r', encoding='utf-8') as fp:
+            for line in fp:
+                lines.append(line)
 
     logger.info("read all data!")
 
@@ -38,6 +38,9 @@ def aggregate_data(data_root: str, save_path: str, train_data_rate: int = 0.8) -
     logger.info("split data and save")
 
     # save train data
+    save_dir = Path(save_path)
+    if save_dir.exists() is False:
+        save_dir.mkdir()
     with open(file=save_path + train_file, mode='w', encoding='utf-8') as fp:
         fp.writelines(train_data)
     with open(file=save_path + valid_file, mode='w', encoding='utf-8') as fp:
