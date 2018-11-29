@@ -1,4 +1,4 @@
-from typing import Dict, List, Sequence, Iterable
+from typing import Dict, List, Iterable, Optional
 import logging
 import re
 import os
@@ -11,7 +11,7 @@ from allennlp.data.dataset_readers.dataset_reader import DatasetReader
 from allennlp.data.fields import Field, TextField, SequenceLabelField
 from allennlp.data.instance import Instance
 from allennlp.data.token_indexers import SingleIdTokenIndexer, TokenIndexer
-from allennlp.data.tokenizers import CharacterTokenizer, Tokenizer
+from allennlp.data.tokenizers import CharacterTokenizer, Tokenizer, Token
 
 logger = logging.getLogger(__name__)
 
@@ -38,10 +38,21 @@ class PeopleReader(DatasetReader):
                                for string in string_list]
                 tokens = [string.split("/")[0]
                           for string in string_list]
-                yield self.text_to_instance(tokens)
+                yield self._get_segment_tag(tokens)
 
     @overrides
-    def text_to_instance(self, tokens: List[str]) -> Instance:
+    def text_to_instance(self, character_tokens: List[Token], character_tags: Optional[List[str]] = None) -> Instance:
+
+        tokens_field = TextField(character_tokens, token_indexers=self._token_indexer)
+        fields = {"tokens": tokens_field}
+        if character_tags is not None:
+            tags_field = SequenceLabelField(
+                character_tags, sequence_field=tokens_field)
+            fields["tags"] = tags_field
+
+        return Instance(fields)
+
+    def _get_segment_tag(self, tokens: List[str]) -> Instance:
         character_tokens: List = []
         character_tags: List = []
         for token in tokens:
@@ -60,11 +71,4 @@ class PeopleReader(DatasetReader):
                         character_tags.append(self._tags[2])
                     else:
                         character_tags.append(self._tags[1])
-        tokens_field = TextField(character_tokens, token_indexers=self._token_indexer)
-        tags_field = SequenceLabelField(
-            character_tags, sequence_field=tokens_field)
-        fields = {
-            'tokens': tokens_field,
-            'tags': tags_field
-        }
-        return Instance(fields)
+        return self.text_to_instance(character_tokens, character_tags)

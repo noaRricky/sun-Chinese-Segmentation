@@ -21,7 +21,7 @@
             "num_layers": 1,
             "bidirectional": true
         },
-        "label_namespace": "tags",
+        "label_namespace": "labels",
         "dropout": 0.1
     },
     "iterator": {
@@ -30,14 +30,14 @@
         "sorting_keys": [
             [
                 "tokens",
-                "num_token"
+                "num_tokens"
             ]
         ]
     },
     "trainer": {
         "num_epochs": 15,
         "patience": 5,
-        "cuda_device": -1,
+        "cuda_device": 0,
         "validation_metric": "+accuracy",
         "optimizer": {
             "type": "adam",
