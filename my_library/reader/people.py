@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class PeopleReader(DatasetReader):
 
     def __init__(self, lazy: bool = False, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
-        super().__init__(False)
+        super().__init__(lazy)
 
         self._character_tokenizer = tokenizer or CharacterTokenizer()
         self._token_indexer = token_indexer or {'tokens': SingleIdTokenIndexer()}
