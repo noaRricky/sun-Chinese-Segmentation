@@ -1,5 +1,5 @@
 from overrides import overrides
-from typing import Dict, List
+from typing import List
 
 from allennlp.common.util import JsonDict
 from allennlp.data import DatasetReader, Instance
