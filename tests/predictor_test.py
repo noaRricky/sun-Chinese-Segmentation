@@ -1,4 +1,5 @@
 from unittest import TestCase
+import pathlib
 
 from pytest import approx
 from allennlp.models.archival import load_archive

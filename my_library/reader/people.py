@@ -41,7 +41,6 @@ class PeopleReader(DatasetReader):
                 if tokens:
                     yield self._get_segment_tag(tokens)
 
-
     @overrides
     def text_to_instance(self, character_tokens: List[Token], character_tags: Optional[List[str]] = None) -> Instance:
 

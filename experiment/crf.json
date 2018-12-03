@@ -35,9 +35,9 @@
         ]
     },
     "trainer": {
-        "num_epochs": 15,
-        "patience": 5,
-        "cuda_device": 0,
+        "num_epochs": 25,
+        "patience": 8,
+        "cuda_device": 2,
         "validation_metric": "+accuracy",
         "optimizer": {
             "type": "adam",

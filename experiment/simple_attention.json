@@ -30,7 +30,7 @@
     },
     "iterator": {
         "type": "bucket",
-        "batch_size": 128,
+        "batch_size": 10,
         "sorting_keys": [
             [
                 "tokens",
@@ -39,8 +39,8 @@
         ]
     },
     "trainer": {
-        "num_epochs": 15,
-        "patience": 5,
+        "num_epochs": 25,
+        "patience": 10,
         "cuda_device": 1,
         "validation_metric": "+accuracy",
         "optimizer": {

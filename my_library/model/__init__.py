@@ -1,0 +1,1 @@
+from my_library.model.base_tagger import BaseTagger
