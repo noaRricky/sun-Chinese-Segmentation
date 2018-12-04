@@ -17,6 +17,7 @@ class SentenceSegmentPredictor(Predictor):
 
     def predict(self, sentence: str) -> JsonDict:
         results = self.predict_json({"sentence": sentence})
+        return results
 
     @overrides
     def _json_to_instance(self, json_dict: JsonDict) -> Instance:
