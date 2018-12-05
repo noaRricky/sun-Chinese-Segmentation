@@ -26,7 +26,6 @@ def predict():
     if request.method == 'POST':
         sentence = request.json['sentence']
         result = predictor.predict(sentence=sentence)
-        print(result)
         result = jsonify(result)
         return result
 

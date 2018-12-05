@@ -8,7 +8,4 @@ from my_library.reader import PeopleReader
 class TestPeopleDatasetReader(AllenNlpTestCase):
     def test_read_from_dir(self):
         reader = PeopleReader()
-        dataset = ensure_list(reader.read('../corpus/people/valid.txt'))
-
-        for instance in dataset:
-            print(instance)
+        dataset = ensure_list(reader.read('corpus/people/valid.txt'))

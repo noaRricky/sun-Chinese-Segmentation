@@ -2,7 +2,8 @@
     "train_data_path": "./corpus/people/train.txt",
     "validation_data_path": "./corpus/people/valid.txt",
     "dataset_reader": {
-        "type": "people2014"
+        "type": "people2014",
+        "max_sequence_length": 256
     },
     "model": {
         "type": "simple_tagger",
@@ -20,7 +21,7 @@
             "hidden_dim": 128,
             "projection_dim": 128,
             "feedforward_hidden_dim": 128,
-            "num_layers": 1,
+            "num_layers": 4,
             "num_attention_heads": 8,
             "use_positional_encoding": true,
             "dropout_prob": 0.1,
@@ -30,7 +31,7 @@
     },
     "iterator": {
         "type": "bucket",
-        "batch_size": 10,
+        "batch_size": 64,
         "sorting_keys": [
             [
                 "tokens",

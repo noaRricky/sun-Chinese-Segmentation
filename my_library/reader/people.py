@@ -19,25 +19,30 @@ logger = logging.getLogger(__name__)
 @DatasetReader.register("people2014")
 class PeopleReader(DatasetReader):
 
-    def __init__(self, lazy: bool = False, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
+    def __init__(self, lazy: bool = False, max_sequence_length: int = 256, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
         super().__init__(lazy)
 
         self._character_tokenizer = tokenizer or CharacterTokenizer()
         self._token_indexer = token_indexer or {'tokens': SingleIdTokenIndexer()}
+        self._max_sequence_length = max_sequence_length
         self._tags = ['B', 'M', 'E', 'S']
 
     @overrides
     def _read(self, file_path: str) -> Iterable[Instance]:
+        max_sequence_length = self._max_sequence_length
 
         cached_path(file_path)
         logger.info(f"read file from {file_path}")
         with open(file=file_path, mode='r', encoding='utf-8') as fp:
-            for line in fp:
+            for idx, line in enumerate(fp):
                 string_list = line.strip().split()
                 string_list = [re.sub(r'^\[', '', string)
                                for string in string_list]
                 tokens = [string.split("/")[0]
                           for string in string_list]
+                if len(tokens) >= max_sequence_length:
+                    logger.info(f"too many words in line {idx}, slice to max sequence length {max_sequence_length}")
+                    tokens = tokens[0: max_sequence_length]
                 if tokens:
                     yield self._get_segment_tag(tokens)
 

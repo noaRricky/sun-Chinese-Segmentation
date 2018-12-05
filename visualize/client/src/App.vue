@@ -59,7 +59,7 @@
         },
         methods: {
             getSegment() {
-                axios.post('http://127.0.0.1:5000/predict',
+                axios.post('http://192.168.1.119:5000/predict',
                     {sentence: this.sentence})
                     .then((response) => {
                         let data = response.data;
