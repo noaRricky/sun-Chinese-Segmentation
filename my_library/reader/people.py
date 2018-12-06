@@ -19,7 +19,8 @@ logger = logging.getLogger(__name__)
 @DatasetReader.register("people2014")
 class PeopleReader(DatasetReader):
 
-    def __init__(self, lazy: bool = False, max_sequence_length: int = 256, tokenizer: Tokenizer = None, token_indexer: TokenIndexer = None):
+    def __init__(self, lazy: bool = False, max_sequence_length: int = 256, tokenizer: Tokenizer = None,
+                 token_indexer: TokenIndexer = None):
         super().__init__(lazy)
 
         self._character_tokenizer = tokenizer or CharacterTokenizer()
@@ -41,7 +42,9 @@ class PeopleReader(DatasetReader):
                 tokens = [string.split("/")[0]
                           for string in string_list]
                 if len(tokens) >= max_sequence_length:
-                    logger.info(f"too many words in line {idx}, slice to max sequence length {max_sequence_length}")
+                    logger.info(
+                        f"too many words in line {idx} file {file_path}, \
+                        slice to max sequence length {max_sequence_length}")
                     tokens = tokens[0: max_sequence_length]
                 if tokens:
                     yield self._get_segment_tag(tokens)

@@ -1,6 +1,6 @@
 {
-    "train_data_path": "./corpus/people/train.txt",
-    "validation_data_path": "./corpus/people/valid.txt",
+    "train_data_path": "corpus/sample/train.txt",
+    "validation_data_path": "corpus/sample/valid.txt",
     "dataset_reader": {
         "type": "people2014",
         "max_sequence_length": 256
@@ -21,7 +21,7 @@
             "hidden_dim": 128,
             "projection_dim": 128,
             "feedforward_hidden_dim": 128,
-            "num_layers": 4,
+            "num_layers": 2,
             "num_attention_heads": 8,
             "use_positional_encoding": true,
             "dropout_prob": 0.1,
@@ -31,7 +31,7 @@
     },
     "iterator": {
         "type": "bucket",
-        "batch_size": 64,
+        "batch_size": 32,
         "sorting_keys": [
             [
                 "tokens",
@@ -42,7 +42,7 @@
     "trainer": {
         "num_epochs": 25,
         "patience": 10,
-        "cuda_device": 1,
+        "cuda_device": -1,
         "validation_metric": "+accuracy",
         "optimizer": {
             "type": "adam",
